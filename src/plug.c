@@ -19,6 +19,7 @@ typedef struct {
 } Plug;
 
 Plug *plug = NULL;
+float volume = 0.1f;
 
 float in_raw[N];
 float in_win[N];
@@ -121,6 +122,24 @@ void plug_update(void)
         }
     }
 
+    if (IsKeyPressed(KEY_UP)) {
+        if (IsMusicReady(plug->music)) {
+            if (volume <= 1.0f) {
+                volume += 0.1f;
+                SetMusicVolume(plug->music, volume);
+            }
+        }
+    }
+
+    if (IsKeyPressed(KEY_DOWN)) {
+        if (IsMusicReady(plug->music)) {
+            if (volume >= 0.1f) {
+                volume -= 0.1f;
+                SetMusicVolume(plug->music, volume);
+            }
+        }
+    }
+
     if (IsFileDropped()) {
         FilePathList droppedFiles = LoadDroppedFiles();
         if (droppedFiles.count > 0) {
@@ -139,7 +158,7 @@ void plug_update(void)
                 printf("music.stream.sampleRate = %u\n", plug->music.stream.sampleRate);
                 printf("music.stream.sampleSize = %u\n", plug->music.stream.sampleSize);
                 printf("music.stream.channels = %u\n", plug->music.stream.channels);
-                SetMusicVolume(plug->music, 0.5f);
+                SetMusicVolume(plug->music, volume);
                 AttachAudioStreamProcessor(plug->music.stream, callback);
                 PlayMusicStream(plug->music);
             } else {
