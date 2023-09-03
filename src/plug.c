@@ -29,6 +29,16 @@ float out_log[N];
 float out_smooth[N];
 float out_smear[N];
 
+// nix is on raylib 4.2.0 which doesn't have IsMusicReady
+bool IsMusicReady(Music music)
+{
+  return ((music.ctxData != NULL) &&          // Validate context loaded
+            (music.frameCount > 0) &&           // Validate audio frame count
+            (music.stream.sampleRate > 0) &&    // Validate sample rate is supported
+            (music.stream.sampleSize > 0) &&    // Validate sample size is supported
+            (music.stream.channels > 0));       // Validate number of channels supported
+}
+
 // Ported from https://rosettacode.org/wiki/Fast_Fourier_transform#Python
 void fft(float in[], size_t stride, float complex out[], size_t n)
 {
